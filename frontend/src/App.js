@@ -13,6 +13,9 @@ import InputNode from './components/InputNode';
 import OutputNode from './components/OutputNode';
 import './styles/App.css';
 
+// Use backend URL from env in production; empty string falls back to proxy in dev
+const API_BASE = process.env.REACT_APP_API_URL || '';
+
 // Register custom node types
 const nodeTypes = {
   inputNode: InputNode,
@@ -84,7 +87,7 @@ function App() {
 
     try {
       console.log('📤 Calling /api/ask-ai with prompt:', prompt.slice(0, 80));
-      const res = await axios.post('/api/ask-ai', { prompt });
+      const res = await axios.post(`${API_BASE}/api/ask-ai`, { prompt });
       const aiReply = res.data.reply;
       console.log('📥 AI reply received');
 
@@ -110,7 +113,7 @@ function App() {
 
     try {
       console.log('💾 Saving to MongoDB...');
-      await axios.post('/api/save', { prompt, response: reply });
+      await axios.post(`${API_BASE}/api/save`, { prompt, response: reply });
       setStatus({ text: 'Saved to database!', type: 'success' });
       console.log('✅ Saved successfully');
     } catch (error) {

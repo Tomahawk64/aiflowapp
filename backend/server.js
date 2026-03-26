@@ -9,7 +9,10 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+const allowedOrigins = process.env.FRONTEND_URL
+  ? [process.env.FRONTEND_URL]
+  : true; // allow all in dev
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
 // Connect to MongoDB
